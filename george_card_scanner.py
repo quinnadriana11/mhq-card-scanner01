@@ -25,10 +25,20 @@ ANTHROPIC_API_KEY = os.environ.get("ANTHROPIC_API_KEY", "")
 
 # ── Google Sheets client ───────────────────────────────────────────────────────
 def get_sheet(tab_name):
-    sa_b64 = os.environ.get("GOOGLE_SERVICE_ACCOUNT_JSON", "")
-    if not sa_b64:
-        raise RuntimeError("GOOGLE_SERVICE_ACCOUNT_JSON environment variable is not set.")
-    service_account_info = json.loads(base64.b64decode(sa_b64).decode("utf-8"))
+    private_key = os.environ.get("GOOGLE_PRIVATE_KEY", "").replace("\\n", "\n")
+    service_account_info = {
+        "type": "service_account",
+        "project_id": "mhq-card-scanner",
+        "private_key_id": "3a6621310aac55f91294b34d5f3058a40250c0aa",
+        "private_key": private_key,
+        "client_email": "mhq-scanner@mhq-card-scanner.iam.gserviceaccount.com",
+        "client_id": "103061283613421001106",
+        "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+        "token_uri": "https://oauth2.googleapis.com/token",
+        "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+        "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/mhq-scanner%40mhq-card-scanner.iam.gserviceaccount.com",
+        "universe_domain": "googleapis.com"
+    }
     scopes = ["https://www.googleapis.com/auth/spreadsheets"]
     creds  = Credentials.from_service_account_info(service_account_info, scopes=scopes)
     client = gspread.authorize(creds)
