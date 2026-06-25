@@ -25,10 +25,10 @@ ANTHROPIC_API_KEY = os.environ.get("ANTHROPIC_API_KEY", "")
 
 # ── Google Sheets client ───────────────────────────────────────────────────────
 def get_sheet(tab_name):
-    sa_json = os.environ.get("GOOGLE_SERVICE_ACCOUNT_JSON", "")
-    if not sa_json:
+    sa_b64 = os.environ.get("GOOGLE_SERVICE_ACCOUNT_JSON", "")
+    if not sa_b64:
         raise RuntimeError("GOOGLE_SERVICE_ACCOUNT_JSON environment variable is not set.")
-    service_account_info = json.loads(sa_json)
+    service_account_info = json.loads(base64.b64decode(sa_b64).decode("utf-8"))
     scopes = ["https://www.googleapis.com/auth/spreadsheets"]
     creds  = Credentials.from_service_account_info(service_account_info, scopes=scopes)
     client = gspread.authorize(creds)
