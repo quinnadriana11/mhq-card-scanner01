@@ -1,1 +1,1 @@
-web: python business_card_tool.py
+web: python george_card_scanner.py
